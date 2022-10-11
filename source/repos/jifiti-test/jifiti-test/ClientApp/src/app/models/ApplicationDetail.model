@@ -1,5 +1,0 @@
-export interface ApplicationModel {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
