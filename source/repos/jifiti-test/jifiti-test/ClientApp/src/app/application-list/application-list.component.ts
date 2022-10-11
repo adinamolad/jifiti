@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
+import { JifitiService } from '../jifiti.service';
+import { Application } from '../models/application.model';
 
 @Component({
   selector: 'app-application-list',
@@ -8,28 +11,27 @@ import { Component, Inject, OnInit } from '@angular/core';
 })
 export class ApplicationListComponent implements OnInit {
 
-  public applications: Application[] = [];
-  private baseUrl: string;
+  public applicationList: Application[] = [];
 
-  constructor(private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
+  constructor(private jifitiService: JifitiService,
+    private http: HttpClient,
+    private router: Router  ) { }
 
   ngOnInit(): void {
+    this.jifitiService.getApplicationList();
 
-    //constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.http.get<Application[]>(this.baseUrl + 'applications').subscribe(result => {
-      this.applications = result;
-      }, error => console.error(error));
-
+    this.jifitiService.applicationList$.subscribe(dataList => {
+      this.applicationList = dataList;
+    });
 
   }
 
+  /*A SECOND WAY:
+  goto(application: Application) {
+    const navigationExtras: NavigationExtras = { state: { application: application } };
+    this.router.navigate(['detail', application.id], navigationExtras);
+  }*/
+
 }
 
-interface Application {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
+

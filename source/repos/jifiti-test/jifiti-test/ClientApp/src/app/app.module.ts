@@ -23,10 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: ApplicationListComponent, pathMatch: 'full' },
-      { path: 'detail/:id/:firstName/:lastName', component: ApplicationDetailComponent },
-    ]),
+    RouterModule,
     AppRoutingModule
   ],
   providers: [],

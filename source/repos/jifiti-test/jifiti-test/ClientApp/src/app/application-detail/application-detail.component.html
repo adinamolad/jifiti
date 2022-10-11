@@ -1,4 +1,4 @@
-<h1>{{id}} {{firstName}} {{lastName}} - Application Details</h1>
+<h1>{{application.id}} {{application.firstName}} {{application.lastName}} - Application Details</h1>
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="transactionList">
   <thead>
     <tr>
@@ -13,7 +13,7 @@
       <td>{{ transaction.cardNo }}</td>
       <td>{{ transaction.issuer }}</td>
       <td>{{ transaction.amount | currency:'USD'}}</td>
-      <td>{{ TransType[transaction.transType] }}</td>
+      <td>{{ TransType[transaction.transType ? transaction.transType: 1 ] }}</td>
     </tr>
   </tbody>
 </table>

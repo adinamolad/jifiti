@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Inject, OnChanges, OnInit } from '@angular/core';
+import { ActivatedRoute, Navigation, Router } from '@angular/router';
 import { JifitiService } from '../jifiti.service';
+import { Application } from '../models/application.model';
+import { Transaction, TransType } from '../models/transaction.model';
 
 @Component({
   selector: 'app-application-detail',
@@ -10,49 +12,44 @@ import { JifitiService } from '../jifiti.service';
 })
 export class ApplicationDetailComponent implements OnInit {
 
-  public transactionList!: Transaction[];
-  private baseUrl: string;
-  public id: number | undefined;
-  public firstName: string | undefined;
-  public lastName: string | undefined;
-  TransType: typeof
-    TransType = TransType;
- 
-  constructor(private route: ActivatedRoute,
-    private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
+  public transactionList: Transaction[] = [];
+  public application: Application = {};
+  TransType: typeof TransType = TransType;
+
+  //A SECOND WAY:
+  //navigation: Navigation | null;
+
+  constructor(private jifitiService: JifitiService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private http: HttpClient) {
+    //A SECOND WAY:
+    //this.navigation = this.router.getCurrentNavigation();
+    }
 
   ngOnInit(): void {
 
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.firstName = String(this.route.snapshot.paramMap.get('firstName'));
-    this.lastName = String(this.route.snapshot.paramMap.get('lastName'));
-    this.http.get<Transaction[]>(this.baseUrl + 'applications/' + this.id).subscribe(result => {
-      this.transactionList = result;
-    }, error => console.error(error));
+    this.application.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.application.firstName = String(this.route.snapshot.paramMap.get('firstName'));
+    this.application.lastName = String(this.route.snapshot.paramMap.get('lastName'));
 
+    /*
+    A SECOND WAY:
+    const state = this.navigation?.extras.state as {application: Application};
+    this.application.id = state.application.id;
+    this.application.firstName = state.application.firstName;
+    this.application.lastName = state.application.lastName;
+   */
 
-  }
+    if (this.application.id) {
+      this.jifitiService.getTransactionList(this.application.id);
+
+      this.jifitiService.transactionList$.subscribe(dataList => {
+        this.transactionList = dataList;
+      });
+    }
 
 }
 
-
-interface Transaction {
-  id: number;
-  amount: string;
-  transType: TransType;
-  cardId: number;
-  appId: number;
-  cardNo: string;
-  issuer: string;
 }
-
-export enum TransType {
-  AUTH = 1,
-  COMMIT = 2,
-  REFUND = 3
-}
-
 
