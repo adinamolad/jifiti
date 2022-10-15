@@ -1,8 +1,0 @@
-{
-"SpaProxyServer": {
-"ServerUrl": "https://localhost:44493",
-"LaunchCommand": "npm start",
-"WorkingDirectory": "C:\\Users\\adina\\source\\repos\\jifiti-test\\jifiti-test\\ClientApp\\",
-"MaxTimeoutInSeconds": "120"
-}
-}
